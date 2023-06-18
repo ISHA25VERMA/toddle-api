@@ -130,6 +130,10 @@ class DeleteJournal(graphene.Mutation):
             return DeleteJournal(error = "You are not authorized to delete a journal")
         try:
             journal = Journal.query.filter_by(id=id).first()
+            for tag in Tags.query.all():
+                if(tag.journal_id == id):
+                    db_session.delete(tag)
+                    db_session.commit()
             db_session.delete(journal)
             db_session.commit()
         except IntegrityError as e:

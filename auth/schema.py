@@ -17,8 +17,14 @@ class Register(graphene.Mutation):
     error = graphene.String()
 
     @classmethod
+    @query_header_jwt_required
     def mutate(cls, _,info, username, password, role):
+        user_id = get_jwt_identity()
+        if(User.query.filter_by(id=user_id).first().role != 'admin'):
+            return Register(error = "You are not authorized to create a user")
         try:
+            if(role not in ['admin', 'teacher', 'student']):
+                return Register(error = "Role must be admin, teacher or student")
             new_user = User(
                 username=username, 
                 password=generate_password_hash(password, method="sha256"), 

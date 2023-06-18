@@ -19,21 +19,17 @@ class Register(graphene.Mutation):
     @classmethod
     def mutate(cls, _,info, username, password, role):
         try:
-            print("trying..")
             new_user = User(
                 username=username, 
                 password=generate_password_hash(password, method="sha256"), 
                 role = role)
-            print("new user object created")
             
             db_session.add(new_user)
-            print("new user added")
             db_session.commit()
-            print("new user committed")
         except IntegrityError as e:
              return Register(error = f'{e.origin}')
         
-        return Register(success = True, message = 'User {username} added successfully')
+        return Register(success = True, message = f'User {username} added successfully')
     
 
     

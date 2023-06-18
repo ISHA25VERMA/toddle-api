@@ -144,10 +144,7 @@ class Mutation(graphene.ObjectType):
 
 class Query(graphene.ObjectType):
     journals = graphene.List(JournalType)
-
-    tags = graphene.List(TagsType)
     
-
     @classmethod
     @query_header_jwt_required
     def resolve_journals(cls, _, info,*args, **kwargs):

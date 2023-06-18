@@ -139,7 +139,7 @@ class DeleteJournal(graphene.Mutation):
         except IntegrityError as e:
             return DeleteJournal(error = f'{e.origin}')
         
-        return DeleteJournal(success = True, message = f'Journal {Journal.query.filter_by(id = id).title} deleted successfully')
+        return DeleteJournal(success = True, message = f'Journal {id} deleted successfully')
 
 class Mutation(graphene.ObjectType):
     create_journal = CreateJournal.Field()

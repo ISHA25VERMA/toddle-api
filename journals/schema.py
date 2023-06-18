@@ -154,8 +154,9 @@ class Query(graphene.ObjectType):
     def resolve_journals(cls, _, info,*args, **kwargs):
         user_id = get_jwt_identity()
         user = User.query.filter_by(id=user_id).first()
-        
-        if(user.role == 'teacher'):
+        if(user.role == 'admin'):
+            return Journal.query.all()
+        elif(user.role == 'teacher'):
             return Journal.query.filter_by(teacher_id=user.id).all()
         else:
             current_time = datetime.now()

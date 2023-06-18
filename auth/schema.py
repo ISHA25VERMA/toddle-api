@@ -71,8 +71,20 @@ class Mutation(graphene.ObjectType):
 class Query(graphene.ObjectType):
     me = graphene.Field(UserType)
 
+    users = graphene.List(UserType)
+
     @classmethod
     @query_header_jwt_required
     def resolve_me(cls, info, *args):
         user_id = get_jwt_identity()
         return User.query.filter_by(id=user_id).first()
+    
+    @classmethod
+    @query_header_jwt_required
+    def resolve_users(cls, info, *args):
+        user_id = get_jwt_identity()
+        user = User.query.filter_by(id=user_id).first()
+        if(user.role == 'admin'):
+            return User.query.all()
+        else:
+            return User.query.filter_by(id=user_id).all()
